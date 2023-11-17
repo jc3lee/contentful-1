@@ -1,14 +1,20 @@
-import { getClient } from "@/lib/contentful-client";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { Document } from "@contentful/rich-text-types";
+import { log } from "console";
+import React from "react";
 import Image from "next/image";
-import { ContentfulLivePreview } from "@contentful/live-preview";
+import {
+  BLOCKS,
+  Document,
+  INLINES,
+  Inline,
+  Block,
+} from "@contentful/rich-text-types";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { getClient } from "@/lib/contentful-client";
 
-async function Post1() {
+async function Post() {
   const client = getClient();
-  // This API call will request an entry with the specified ID from the space defined at the top, using a space-specific access token
-  ContentfulLivePreview.init({ locale: "en-US" });
   const data = await client.getEntry(process.env.CONTENTFUL_ENTRY as string);
+  log("post data", JSON.stringify(data.fields, null, 4));
   const { mainPhoto } = data.fields as any;
   const imgUrl = mainPhoto?.fields?.file?.url;
   const richTextComponents = documentToReactComponents(
@@ -31,4 +37,4 @@ async function Post1() {
   );
 }
 
-export default Post1;
+export default Post;
